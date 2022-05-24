@@ -88,11 +88,24 @@ function addListeners(){
 document.querySelectorAll(".element").forEach(element => {
     element.addEventListener("mouseover", event => {
         if(mouseIsDown){
+        if(!element.getAttribute("style")){
         var color = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}`;
         element.style.backgroundColor = color;
+        } else {
+        var color = element.style.backgroundColor;
+        const arr = color.match(/\d+/g).map(Number);
+        for(let i = 0; i<arr.length; i++){
+            if(arr[i] === 0){
+                continue;
+            }
+            arr[i] = arr[i] - 25;
+            if(arr[i] < 0){
+                arr[i] = 0;
+            }
         }
-    })    
+        color = `rgb(${arr[0]}, ${arr[1]}, ${arr[2]})`;
+        element.style.backgroundColor = color;
+        }
+    }
 })
-}
-
-
+})}

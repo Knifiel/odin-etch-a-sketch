@@ -4,12 +4,40 @@ container.style.flexDirection = "column";
 container.style.justifyItems = "center";
 container.style.alignItems = "center";
 
+//check if mouse is being held down
+let mouseIsDown = false;
+document.addEventListener('mousedown', function(){
+    mouseIsDown = true;
+});
+document.addEventListener('mouseup', function(){
+    mouseIsDown = false;
+});
+
+
 const gridcontainer = document.createElement("div");
 
+//disable drag in grid
+gridcontainer.ondragstart = function () {return false};
 
 const button = document.createElement('button');
 button.textContent = "Change grid dimensions";
 button.style.width = "max-content";
+
+button.addEventListener("click", ChangeGrid = () =>{
+    let choice = prompt("What size of grid do you want?", "Enter number between 0 and 100");
+    choice = parseInt(choice, 10);
+    if(isNaN(choice)){
+        ChangeGrid();
+        return;
+    } else if(choice > 100){
+        ChangeGrid();
+        return;
+    }
+    makeGrid(choice);
+})
+
+
+
 
 gridcontainer.style.flexShrink = "0";
 gridcontainer.style.width = "960px";
@@ -19,7 +47,6 @@ gridcontainer.style.display = 'grid';
 gridcontainer.style.gap = 0;
 gridcontainer.style.borderStyle = "solid";
 gridcontainer.style.borderColor = "black";
-
 
 container.appendChild(button);
 container.appendChild(gridcontainer);
@@ -50,6 +77,7 @@ var documentFragment = document.createDocumentFragment();
 for (let i=0; i<(gridsize**2); i++){
     const element = document.createElement("div");
     element.className = "element";
+    element.setAttribute("draggable", "false");
     documentFragment.appendChild(element);
 }
 gridcontainer.appendChild(documentFragment);
@@ -59,8 +87,12 @@ addListeners();
 function addListeners(){
 document.querySelectorAll(".element").forEach(element => {
     element.addEventListener("mouseover", event => {
+        if(mouseIsDown){
         var color = `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}`;
         element.style.backgroundColor = color;
+        }
     })    
 })
 }
+
+
